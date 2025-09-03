@@ -1,8 +1,9 @@
-import os
+import json
 from io import BytesIO
 
 import boto3
 import qrcode
+from botocore.exceptions import ClientError
 
 # Loading Environment variable (AWS Access Key and Secret Key)
 from dotenv import load_dotenv
@@ -24,10 +25,26 @@ app.add_middleware(
 )
 
 # AWS S3 Configuration
+secret_name = "devops-qr-code"
+region_name = "ap-southeast-1"
+
+# Create a Secrets Manager client
+session = boto3.session.Session()
+client = session.client(service_name="secretsmanager", region_name=region_name)
+
+try:
+    get_secret_value_response = client.get_secret_value(SecretId=secret_name)
+except ClientError as e:
+    # For a list of exceptions thrown, see
+    # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+    raise e
+
+secret = json.loads(get_secret_value_response["SecretString"])
+
 s3 = boto3.client(
     "s3",
-    aws_access_key_id=os.getenv("AWS_ACCESS_KEY"),
-    aws_secret_access_key=os.getenv("AWS_SECRET_KEY"),
+    aws_access_key_id=secret["aws_access_key_id"],
+    aws_secret_access_key=secret["aws_secret_access_key"],
 )
 
 bucket_name = "ken-devops-qr-code"  # Add your bucket name here
