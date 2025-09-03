@@ -5,6 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Log in to Docker Hub
+        run: docker login -u kenken17 -p ${{ secrets.DOCKER_HUB_ACCESS_TOKEN  }}
       - name: Build the API Docker image
         run: docker build ./api/ --tag kenken17/devops-qr-code-api:latest
       - name: Push the API image to Docker Hub
