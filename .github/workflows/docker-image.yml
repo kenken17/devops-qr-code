@@ -1,5 +1,11 @@
 name: Build and Publish Docker Image CI
-on: [workflow_dispatch]
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'api/Dockerfile'
+      - 'front-end-nextjs/Dockerfile'
 jobs:
   build:
     runs-on: ubuntu-latest
