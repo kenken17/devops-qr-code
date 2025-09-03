@@ -1,18 +1,15 @@
 name: Build and Publish Docker Image CI
-
-on:
-  [workflow_dispatch]
-
+on: [workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the API Docker image
-      run: docker build ./api --file Dockerfile --tag kenken17/devops-qr-code-api:latest
-    - name: Push the API image to Docker Hub
-      run: docker push kenken17/devops-qr-code-api:latest      
-    - name: Build the Client Docker image
-      run: docker build ./front-end-nextjs --file Dockerfile --tag kenken17/devops-qr-code-client:latest
-    - name: Push the API image to Docker Hub
-      run: docker push kenken17/devops-qr-code-client:latest
+      - uses: actions/checkout@v4
+      - name: Build the API Docker image
+        run: docker build ./api/ --tag kenken17/devops-qr-code-api:latest
+      - name: Push the API image to Docker Hub
+        run: docker push kenken17/devops-qr-code-api:latest
+      - name: Build the Client Docker image
+        run: docker build ./front-end-nextjs/ --tag kenken17/devops-qr-code-client:latest
+      - name: Push the API image to Docker Hub
+        run: docker push kenken17/devops-qr-code-client:latest
